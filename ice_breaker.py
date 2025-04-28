@@ -1,6 +1,9 @@
 from dotenv import load_dotenv
 import os
+
+from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
+
 from langchain_openai import ChatOpenAI
 
 SUMMARY_TEMPLATE = \
@@ -20,13 +23,13 @@ def generate_summary(information: str) -> str:
         model=os.environ.get("LLM_MODEL"),
         temperature=0)
     
-    summary_chain = summary_prompt | llm
+    summary_chain = summary_prompt | llm | StrOutputParser()
 
     response = summary_chain.invoke({
         "information": information
     })
     
-    return response.content
+    return response
 
 if __name__ == "__main__":
     load_dotenv()
